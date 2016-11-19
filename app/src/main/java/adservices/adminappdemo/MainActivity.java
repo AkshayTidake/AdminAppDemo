@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RadioButton srb,crb,mrb;
     int chrg,lav;
     Button b,b1;
-    String url="http://192.168.0.4:80/clubit/insert.php";
     ProgressDialog PD;
     Date d=new Date();
     Date d1=new Date();
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DatePicker dp;
     TimePicker e10,e11;
 
-    String name,desc,dspl,fspl,dcode,dte,dt,revent,ftime,ttime,ft,tt,single,couple,mix;
+    String name,desc,dspl,fspl,dcode,dte,dt,ftime,ttime,ft,tt,single,couple,mix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +69,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         e5= (EditText) findViewById(R.id.ed5);
         e6= (EditText) findViewById(R.id.ed6);
         e8= (EditText) findViewById(R.id.ed8);
+
         dp= (DatePicker) findViewById(R.id.ed9);
+
         e10= (TimePicker) findViewById(R.id.ed10);
         e11= (TimePicker) findViewById(R.id.ed11);
+
         b= (Button) findViewById(R.id.button2);
         b1=(Button) findViewById(R.id.button3);
+
         b.setOnClickListener(this);
         b1.setOnClickListener(this);
         // Firebase ref= new Firebase(Config.firebase_url);
@@ -125,23 +128,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void insert() {
         PD.show();
-        name=e1.getText().toString();
-        desc=e2.getText().toString();
+
+         name=e1.getText().toString();
+         desc=e2.getText().toString();
          dspl=e3.getText().toString();
          fspl=e4.getText().toString();
          chrg=Integer.parseInt(e5.getText().toString());
          lav=Integer.parseInt(e6.getText().toString());
          dcode=e8.getText().toString();
+
          dte=dp.getYear()+"-"+(dp.getMonth()+1)+"-"+dp.getDayOfMonth();
+
         ftime=e10.getCurrentHour()+":"+e10.getCurrentMinute();
         ttime=e11.getCurrentHour()+":"+e11.getCurrentMinute();
+
         radioCheck();
 
         try {
             d=sdf2.parse(dte);
             d1=sdf.parse(ftime);
             d2=sdf.parse(ttime);
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             e.printStackTrace();
         }
         dt=sdf2.format(d);
@@ -149,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tt=sdf.format(d2);
 
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, ConfigRequest.URL_ADD,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -164,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Toast.makeText(getApplicationContext(),
                         "failed to insert"+error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"data not inserted please check your inernet connection",Toast.LENGTH_LONG).show();
                 Log.d("error",""+error);
             }
         }) {
@@ -204,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button3:
                 startActivity(new Intent(this,EventsList.class));
+                finish();
                 break;
 
         }
