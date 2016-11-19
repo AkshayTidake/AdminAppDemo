@@ -3,6 +3,7 @@ package adservices.adminappdemo;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,12 +32,12 @@ import java.util.List;
 
 public class EventsList extends AppCompatActivity {
 
-
+    String dsp;
     ProgressDialog progressDialog;
     JSONObject jsonObject;
 
     JSONArray array;
-    String url1="http://192.168.0.4:80/clubit/fetch.php";
+
 
 
 
@@ -73,7 +74,7 @@ public class EventsList extends AppCompatActivity {
                 mLayoutManager = new LinearLayoutManager(ctx);
                 mRecyclerView.setLayoutManager(mLayoutManager);
                 mRecyclerView.setHasFixedSize(true);
-                mAdapter = new MyAdapter(d);
+                mAdapter = new MyAdapter(d,EventsList.this);
                 mRecyclerView.setAdapter(mAdapter);
                 progressDialog = ProgressDialog.show(EventsList.this, "Fetching Data", "Please wait...", false, false);
 
@@ -85,7 +86,7 @@ public class EventsList extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
                 BufferedReader bufferedReader = null;
                 try {
-                    URL url = new URL(url1);
+                    URL url = new URL(ConfigRequest.URL_GET_ALL);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     StringBuilder sb = new StringBuilder();
 
@@ -104,10 +105,13 @@ public class EventsList extends AppCompatActivity {
                     while(count<array.length()){
                         JSONObject jso=array.getJSONObject(count);
                         count++;
-                        Data data=new Data(jso.getString("name"),jso.getString("event_name"));
+                        Data data=new Data(jso.getString("name"),jso.getString("event_name"),jso.getString("date"));
+
+
                         publishProgress(data);
                         Log.d("data",""+data);
                         Thread.sleep(1000);
+
                     }
 
 
@@ -137,6 +141,7 @@ public class EventsList extends AppCompatActivity {
         sendRequest sr = new sendRequest(this);
         sr.execute();
     }
+
 
 
 
